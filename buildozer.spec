@@ -9,7 +9,7 @@ android.ndk_path = /usr/local/lib/android/sdk/ndk/25.2.9519653
 version = 1.0
 
 # ВАЖНО: Правильные зависимости без оборванных строк. Добавлены numpy и pyjnius
-requirements = python3, kivy==2.3.0, https://github.com, numpy, pillow, pyjnius
+requirements = python3, kivy==2.3.0, 
 
 orientation = portrait
 fullscreen = 0
