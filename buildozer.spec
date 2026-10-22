@@ -20,7 +20,6 @@ android.archs = arm64-v8a
 android.ndk = 25b
 android.api = 33
 android.minapi = 21
-android.build_tools_version = 33.0.2
 
 # Запрашиваем права на чтение и запись файлов (включая работу с внешним накопителем)
 android.permissions = WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE
