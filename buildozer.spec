@@ -4,7 +4,8 @@ package.name = audioreverb
 package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
-
+android.sdk_path = /usr/local/lib/android/sdk
+android.ndk_path = /usr/local/lib/android/sdk/ndk/25.2.9519653
 version = 1.0
 
 # ВАЖНО: Правильные зависимости без оборванных строк. Добавлены numpy и pyjnius
