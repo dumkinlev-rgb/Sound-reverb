@@ -1,0 +1,28 @@
+name: Build Android App with Buildozer
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ccache automake libtool pkg-config libssl-dev libffi-dev libgmp-dev zlib1g-dev lld openjdk-17-jdk
+    - name: Build with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      with:
+        command: buildozer android release
+        repository_root: .
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Android-APK
+        path: bin/*.apk
