@@ -16,24 +16,32 @@ jobs:
       with:
         python-version: '3.11'
 
-    # Устанавливаем все системные инструменты для компиляции Kivy и Numpy под Android
     - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y ccache automake libtool pkg-config libssl-dev libffi-dev libgmp-dev zlib1g-dev lld openjdk-17-jdk
 
-    # Ставим сам Buildozer и зависимости на виртуальную машину через pip
     - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    # Запускаем прямую сборку
+    # ЖЕСТКОЕ И ТОТАЛЬНОЕ ПРИНЯТИЕ ВСЕХ ЛИЦЕНЗИЙ ANDROID
+    - name: Accept All Android Licenses
+      run: |
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        # Принимаем лицензии в системном SDK гитхаба
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        # Принимаем лицензии в папке, которую создает сам buildozer
+        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+        echo -e "\n8933bad161d753db11550c93f4e2d43e2942c6c4\n25dbfcf280034d196f2797a7b3f115d95a273249\xd56f5187479451eabf01fb74373028ab849cd71e" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+
     - name: Build with Buildozer
       run: |
         buildozer android release
 
-    # Сохраняем готовый APK-файл
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
