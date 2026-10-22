@@ -26,7 +26,11 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    # СОЗДАЕМ ССЫЛКУ ДЛЯ СТАРОГО ПУТИ SDKMANAGER, КОТОРЫЙ ИЩЕТ BUILDOZER
+    # Автоматическое исправление требований прямо перед сборкой
+    - name: Auto-fix buildozer.spec requirements
+      run: |
+        sed -i 's/^requirements =.*/requirements = python3,kivy==2.3.0,kivymd,numpy,pillow,pyjnius/g' buildozer.spec
+
     - name: Fix sdkmanager path for Buildozer
       run: |
         sudo mkdir -p /usr/local/lib/android/sdk/tools/bin
