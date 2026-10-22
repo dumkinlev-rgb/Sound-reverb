@@ -26,7 +26,12 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    # Автоматически принимаем лицензии для встроенного в гитхаб Android SDK
+    # СОЗДАЕМ ССЫЛКУ ДЛЯ СТАРОГО ПУТИ SDKMANAGER, КОТОРЫЙ ИЩЕТ BUILDOZER
+    - name: Fix sdkmanager path for Buildozer
+      run: |
+        sudo mkdir -p /usr/local/lib/android/sdk/tools/bin
+        sudo ln -s /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /usr/local/lib/android/sdk/tools/bin/sdkmanager
+
     - name: Accept All Android Licenses
       run: |
         mkdir -p ~/.android
