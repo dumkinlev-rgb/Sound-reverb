@@ -19,24 +19,30 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ccache automake libtool pkg-config libssl-dev libffi-dev libgmp-dev zlib1g-dev lld openjdk-17-jdk
+        sudo apt-get install -y ccache automake libtool pkg-config libssl-dev libffi-dev libgmp-dev zlib1g-dev lld openjdk-17-jdk wget unzip
 
     - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    # ЖЕСТКОЕ И ТОТАЛЬНОЕ ПРИНЯТИЕ ВСЕХ ЛИЦЕНЗИЙ ANDROID
+    # Предустанавливаем официальные cmdline-tools от Google, чтобы Buildozer не спотыкался на путях sdkmanager
+    - name: Setup Android SDK Manager Tools
+      run: |
+        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        wget https://google.com -O tools.zip
+        unzip tools.zip -d ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+        rm tools.zip
+
+    # Автоматически принимаем все лицензии во всех созданных папках
     - name: Accept All Android Licenses
       run: |
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
-        # Принимаем лицензии в системном SDK гитхаба
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        # Принимаем лицензии в папке, которую создает сам buildozer
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
         mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
         echo -e "\n8933bad161d753db11550c93f4e2d43e2942c6c4\n25dbfcf280034d196f2797a7b3f115d95a273249\xd56f5187479451eabf01fb74373028ab849cd71e" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
     - name: Build with Buildozer
       run: |
